@@ -1,76 +1,89 @@
 const Footer = () => {
     return (
-        <footer className="bg-[#102a18] text-gray-300 pt-20 pb-10 border-t border-green-900/50">
-            <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
+        <footer className="bg-[#0a1f10] text-gray-400 pt-20 pb-10 border-t border-white/5">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
+                {/* Brand */}
                 <div>
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className="w-12 h-12 bg-[#2e6b3c] rounded-full flex items-center justify-center font-bold text-xl text-white shadow-sm ring-4 ring-[#1a4325]">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-11 h-11 bg-tpq-yellow rounded-xl flex items-center justify-center font-black text-tpq-green text-lg shadow-lg shadow-tpq-yellow/10">
                             T
                         </div>
                         <div>
-                            <h1 className="font-bold text-xl text-white tracking-wide">TPQ Nurul Iman</h1>
-                            <p className="text-xs text-gray-400 tracking-wider">Taman Pendidikan Al-Quran</p>
+                            <h1 className="font-bold text-lg text-white tracking-wide">TPQ Platform</h1>
+                            <p className="text-xs text-gray-500 tracking-wider">Manajemen TPQ Digital</p>
                         </div>
                     </div>
-                    <p className="text-sm text-gray-400 leading-relaxed max-w-sm mb-6">
-                        Membentuk generasi Qurani yang berakhlak mulia dan mencintai Al-Quran sejak tahun 2008.
+                    <p className="text-sm text-gray-500 leading-relaxed max-w-sm mb-6">
+                        Platform manajemen TPQ terpadu untuk ustadz. Kelola data santri, absensi, nilai, dan kelompok halaqah dalam satu tempat.
                     </p>
-                    <div className="flex gap-3">
-                        <a href="#" className="w-10 h-10 rounded-full bg-[#1a4325] flex items-center justify-center hover:bg-tpq-yellow hover:text-tpq-green transition-all duration-300 border border-green-800/50 hover:-translate-y-1">in</a>
-                        <a href="#" className="w-10 h-10 rounded-full bg-[#1a4325] flex items-center justify-center hover:bg-tpq-yellow hover:text-tpq-green transition-all duration-300 border border-green-800/50 hover:-translate-y-1">fb</a>
-                        <a href="#" className="w-10 h-10 rounded-full bg-[#1a4325] flex items-center justify-center hover:bg-tpq-yellow hover:text-tpq-green transition-all duration-300 border border-green-800/50 hover:-translate-y-1">ig</a>
-                    </div>
                 </div>
 
+                {/* Navigasi */}
                 <div>
                     <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <span className="w-1 h-3 bg-tpq-yellow rounded-full"></span>
+                        <span className="w-1 h-3 bg-tpq-yellow rounded-full" />
                         Navigasi
                     </h4>
-                    <ul className="space-y-4 text-sm text-gray-400">
-                        {["Beranda", "Tentang Kami", "Program", "Pengajar", "Syarat & Ketentuan"].map((link, i) => (
-                            <li key={i}><a href="#" className="hover:text-tpq-yellow transition-colors flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-all text-tpq-yellow transform -translate-x-2 group-hover:translate-x-0">▶</span> {link}</a></li>
+                    <ul className="space-y-3 text-sm">
+                        {[
+                            { label: 'Beranda', href: '#' },
+                            { label: 'Fitur', href: '#fitur' },
+                            { label: 'Cara Kerja', href: '#cara-kerja' },
+                            { label: 'Testimoni', href: '#testimoni' },
+                        ].map((link, i) => (
+                            <li key={i}>
+                                <a href={link.href} className="hover:text-tpq-yellow transition-colors text-gray-500 hover:translate-x-1 inline-block transform">
+                                    {link.label}
+                                </a>
+                            </li>
                         ))}
                     </ul>
                 </div>
 
+                {/* Fitur */}
                 <div>
                     <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <span className="w-1 h-3 bg-tpq-yellow rounded-full"></span>
-                        Program
+                        <span className="w-1 h-3 bg-tpq-yellow rounded-full" />
+                        Fitur
                     </h4>
-                    <ul className="space-y-4 text-sm text-gray-400">
-                        {["Iqra & Tajwid", "Tilawah Al-Quran", "Tahfidz Al-Quran", "Kelas Dewasa"].map((link, i) => (
-                            <li key={i}><a href="#" className="hover:text-tpq-yellow transition-colors flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-all text-tpq-yellow transform -translate-x-2 group-hover:translate-x-0">▶</span> {link}</a></li>
+                    <ul className="space-y-3 text-sm">
+                        {['Data Santri', 'Absensi Harian', 'Penilaian Ngaji', 'Kelompok Halaqah', 'Laporan Santri'].map((link, i) => (
+                            <li key={i}>
+                                <a href="#fitur" className="hover:text-tpq-yellow transition-colors text-gray-500 hover:translate-x-1 inline-block transform">
+                                    {link}
+                                </a>
+                            </li>
                         ))}
                     </ul>
                 </div>
 
+                {/* Kontak */}
                 <div>
                     <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm flex items-center gap-2">
-                        <span className="w-1 h-3 bg-tpq-yellow rounded-full"></span>
-                        Kontak Kami
+                        <span className="w-1 h-3 bg-tpq-yellow rounded-full" />
+                        Kontak
                     </h4>
-                    <ul className="space-y-4 text-sm text-gray-400">
-                        <li className="flex items-start gap-4 p-4 rounded-2xl bg-[#15341e]/50 hover:bg-[#15341e] border border-green-900/30 transition-colors group">
-                            <span className="text-tpq-yellow text-xl group-hover:scale-110 transition-transform">📞</span>
+                    <ul className="space-y-4 text-sm">
+                        <li className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5 group hover:bg-white/[0.06] transition-colors">
+                            <span className="text-tpq-yellow text-lg mt-0.5">📧</span>
                             <div>
-                                <p className="text-xs text-green-500 mb-1 font-medium uppercase tracking-wider">Telepon</p>
-                                <a href="#" className="hover:text-white transition-colors font-medium text-base">(021) 123-4567</a>
+                                <p className="text-[10px] text-gray-600 mb-1 font-medium uppercase tracking-wider">Email</p>
+                                <a href="mailto:info@tpqplatform.id" className="hover:text-white transition-colors text-gray-400 text-sm">info@tpqplatform.id</a>
                             </div>
                         </li>
-                        <li className="flex items-start gap-4 p-4 rounded-2xl bg-[#15341e]/50 hover:bg-[#15341e] border border-green-900/30 transition-colors group">
-                            <span className="text-tpq-yellow text-xl group-hover:scale-110 transition-transform">📧</span>
+                        <li className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5 group hover:bg-white/[0.06] transition-colors">
+                            <span className="text-tpq-yellow text-lg mt-0.5">📞</span>
                             <div>
-                                <p className="text-xs text-green-500 mb-1 font-medium uppercase tracking-wider">Email</p>
-                                <a href="#" className="hover:text-white transition-colors text-base break-all">info@tpqnuruliman.com</a>
+                                <p className="text-[10px] text-gray-600 mb-1 font-medium uppercase tracking-wider">WhatsApp</p>
+                                <a href="#" className="hover:text-white transition-colors text-gray-400 text-sm">+62 812-3456-7890</a>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div className="max-w-7xl mx-auto px-8 pt-8 border-t border-green-900/50 text-center text-sm text-gray-500">
-                <p>&copy; 2026 TPQ Nurul Iman. Hak Cipta Dilindungi.</p>
+
+            <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 border-t border-white/5 text-center text-sm text-gray-600">
+                <p>&copy; 2026 TPQ Platform. Hak Cipta Dilindungi.</p>
             </div>
         </footer>
     );

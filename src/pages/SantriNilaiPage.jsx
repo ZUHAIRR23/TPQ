@@ -24,6 +24,24 @@ const getInitials = (name) => {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
 
+const PERIOD_OPTIONS = [
+  { value: '1', label: '1 Bulan' },
+  { value: '3', label: '3 Bulan' },
+  { value: '6', label: '6 Bulan' },
+  { value: '12', label: '12 Bulan' },
+  { value: 'all', label: 'Semua Data' },
+];
+
+const parseNilaiDate = (nilai) => {
+  const nilaiDate = nilai?.tanggal ? new Date(nilai.tanggal) : null;
+  if (nilaiDate && !Number.isNaN(nilaiDate.getTime())) return nilaiDate;
+
+  const createdDate = nilai?.created_at ? new Date(nilai.created_at) : null;
+  if (createdDate && !Number.isNaN(createdDate.getTime())) return createdDate;
+
+  return null;
+};
+
 // ── Icons ────────────────────────────────────────────────────────────────────
 const ArrowLeftIcon = ({ className }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -46,6 +64,12 @@ const NoteIcon = ({ className }) => (
 const CalendarIcon = ({ className }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+  </svg>
+);
+
+const PrintIcon = ({ className }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6 9V4h12v5M6 18h12v2H6v-2zm-1 0h14a2 2 0 002-2v-5a2 2 0 00-2-2H5a2 2 0 00-2 2v5a2 2 0 002 2z" />
   </svg>
 );
 
@@ -162,16 +186,75 @@ const SantriNilaiPage = () => {
   const [dataNilai, setDataNilai] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [periodeBulan, setPeriodeBulan] = useState('3');
+
+  const filteredNilai = useMemo(() => {
+    if (dataNilai.length === 0) return [];
+    if (periodeBulan === 'all') return dataNilai;
+
+    const jumlahBulan = Number(periodeBulan);
+    if (!Number.isFinite(jumlahBulan) || jumlahBulan <= 0) return dataNilai;
+
+    const batasTanggal = new Date();
+    batasTanggal.setHours(0, 0, 0, 0);
+    batasTanggal.setMonth(batasTanggal.getMonth() - jumlahBulan);
+
+    return dataNilai.filter((item) => {
+      const tanggalNilai = parseNilaiDate(item);
+      return tanggalNilai ? tanggalNilai >= batasTanggal : false;
+    });
+  }, [dataNilai, periodeBulan]);
 
   const { nilaiSummary, totalNilai } = useMemo(() => {
-    const summary = dataNilai.reduce((acc, item) => {
+    const summary = filteredNilai.reduce((acc, item) => {
       if (item.penilaian === 'L') acc.L += 1;
       if (item.penilaian === 'KL') acc.KL += 1;
       if (item.penilaian === 'TL') acc.TL += 1;
       return acc;
     }, { L: 0, KL: 0, TL: 0 });
-    return { nilaiSummary: summary, totalNilai: dataNilai.length };
-  }, [dataNilai]);
+    return { nilaiSummary: summary, totalNilai: filteredNilai.length };
+  }, [filteredNilai]);
+
+  const periodeLabel = useMemo(() => (
+    PERIOD_OPTIONS.find((option) => option.value === periodeBulan)?.label || 'Semua Data'
+  ), [periodeBulan]);
+
+  const progresBulanan = useMemo(() => {
+    const grouped = filteredNilai.reduce((acc, item) => {
+      const tanggalNilai = parseNilaiDate(item);
+      if (!tanggalNilai) return acc;
+
+      const key = `${tanggalNilai.getFullYear()}-${String(tanggalNilai.getMonth() + 1).padStart(2, '0')}`;
+      if (!acc[key]) {
+        acc[key] = {
+          bulanLabel: tanggalNilai.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }),
+          total: 0,
+          L: 0,
+          KL: 0,
+          TL: 0,
+        };
+      }
+
+      acc[key].total += 1;
+      if (item.penilaian === 'L') acc[key].L += 1;
+      if (item.penilaian === 'KL') acc[key].KL += 1;
+      if (item.penilaian === 'TL') acc[key].TL += 1;
+      return acc;
+    }, {});
+
+    return Object.entries(grouped)
+      .sort(([a], [b]) => b.localeCompare(a))
+      .map(([, value]) => ({
+        ...value,
+        persentaseLancar: value.total > 0 ? Math.round((value.L / value.total) * 100) : 0,
+      }));
+  }, [filteredNilai]);
+
+  const handlePrintRaport = () => {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -236,9 +319,11 @@ const SantriNilaiPage = () => {
           HERO HEADER — dark green gradient with integrated profile
           ═══════════════════════════════════════════════════════════════════════ */}
       {loading && !santri ? (
-        <HeroSkeleton />
+        <div className="print:hidden">
+          <HeroSkeleton />
+        </div>
       ) : (
-        <header className="relative bg-gradient-to-br from-tpq-green via-tpq-green to-tpq-light overflow-hidden">
+        <header className="relative bg-gradient-to-br from-tpq-green via-tpq-green to-tpq-light overflow-hidden print:hidden">
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-72 h-72 bg-white/[0.03] rounded-full -translate-y-1/2 translate-x-1/3" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/[0.03] rounded-full translate-y-1/3 -translate-x-1/4" />
@@ -296,7 +381,7 @@ const SantriNilaiPage = () => {
       {/* ═══════════════════════════════════════════════════════════════════════
           MAIN CONTENT
           ═══════════════════════════════════════════════════════════════════════ */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 pb-12 space-y-5 sm:space-y-6 relative z-10">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 pb-12 space-y-5 sm:space-y-6 relative z-10 print:hidden">
         {/* Error Alert */}
         {error && (
           <div className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-2xl text-sm shadow-sm">
@@ -315,8 +400,53 @@ const SantriNilaiPage = () => {
           </div>
         )}
 
-        {/* ── Stats & Progress ────────────────────────────────────────────── */}
         {!loading && !error && dataNilai.length > 0 && (
+          <section className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-sm border border-gray-100">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <h3 className="text-sm font-bold text-gray-900">Raport Periode</h3>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pilih rentang waktu untuk melihat progres santri dan cetak raport.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handlePrintRaport}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-tpq-green text-white hover:brightness-95 transition"
+              >
+                <PrintIcon className="w-4 h-4" />
+                Cetak Raport
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {PERIOD_OPTIONS.map((option) => {
+                const isActive = periodeBulan === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setPeriodeBulan(option.value)}
+                    className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition ${
+                      isActive
+                        ? 'bg-tpq-green/10 text-tpq-green border-tpq-green/30'
+                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="text-xs text-gray-400 mt-3">
+              Menampilkan {totalNilai} evaluasi dari {dataNilai.length} total catatan ({periodeLabel}).
+            </p>
+          </section>
+        )}
+
+        {/* ── Stats & Progress ────────────────────────────────────────────── */}
+        {!loading && !error && totalNilai > 0 && (
           <>
             {/* Stat Cards */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4">
@@ -416,20 +546,29 @@ const SantriNilaiPage = () => {
           </div>
         )}
 
+        {!loading && !error && dataNilai.length > 0 && totalNilai === 0 && (
+          <div className="text-center bg-white rounded-2xl sm:rounded-3xl py-12 px-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Belum Ada Nilai di Periode Ini</h3>
+            <p className="text-sm text-gray-400 max-w-md mx-auto leading-relaxed">
+              Belum ada catatan penilaian pada rentang {periodeLabel}. Coba pilih periode yang lebih panjang.
+            </p>
+          </div>
+        )}
+
         {/* ── Timeline Cards ──────────────────────────────────────────────── */}
-        {!loading && !error && dataNilai.length > 0 && (
+        {!loading && !error && totalNilai > 0 && (
           <section>
             {/* Section header */}
             <div className="flex items-center gap-2.5 mb-4">
               <div className="p-2 bg-tpq-green/10 rounded-xl">
                 <CalendarIcon className="w-4.5 h-4.5 text-tpq-green" />
               </div>
-              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Riwayat Belajar</h2>
+              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Riwayat Belajar ({periodeLabel})</h2>
               <div className="flex-1 h-px bg-gray-100 ml-2" />
             </div>
 
             <div className="space-y-3 sm:space-y-4">
-              {dataNilai.map((nilai) => {
+              {filteredNilai.map((nilai) => {
                 const meta = NILAI_META[nilai.penilaian] || {};
                 const accentBorder = meta.accentBorder || 'border-l-gray-300';
 
@@ -480,6 +619,102 @@ const SantriNilaiPage = () => {
           </section>
         )}
       </main>
+
+      {!loading && !error && dataNilai.length > 0 && (
+        <section className="hidden print:block max-w-4xl mx-auto px-6 py-8 text-black">
+          <header className="border-b border-gray-300 pb-4 mb-5">
+            <h2 className="text-2xl font-bold">Raport Progres Santri</h2>
+            <p className="text-sm text-gray-700 mt-1">Periode: {periodeLabel}</p>
+            <p className="text-sm text-gray-700">
+              Tanggal Cetak: {formatDisplayDate(new Date(), { day: 'numeric', month: 'long', year: 'numeric' })}
+            </p>
+          </header>
+
+          <section className="mb-5">
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-2">Data Santri</h3>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+              <p><span className="font-semibold">Nama:</span> {santri?.nama_lengkap || '-'}</p>
+              <p><span className="font-semibold">Status:</span> {santri?.status || '-'}</p>
+              <p><span className="font-semibold">Jenis Kelamin:</span> {santri?.jenis_kelamin || '-'}</p>
+              <p><span className="font-semibold">Total Evaluasi Periode:</span> {totalNilai}</p>
+            </div>
+          </section>
+
+          <section className="mb-5">
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-2">Ringkasan Nilai</h3>
+            <div className="grid grid-cols-3 gap-3">
+              {Object.entries(NILAI_META).map(([key, meta]) => (
+                <div key={key} className="border border-gray-300 rounded-lg p-3">
+                  <p className="text-xs text-gray-600">{meta.label}</p>
+                  <p className="text-xl font-bold">{nilaiSummary[key]}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mb-5">
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-2">Progres Bulanan</h3>
+            {progresBulanan.length > 0 ? (
+              <table className="w-full text-sm border border-gray-300 border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-2 py-1 text-left">Bulan</th>
+                    <th className="border border-gray-300 px-2 py-1 text-center">Evaluasi</th>
+                    <th className="border border-gray-300 px-2 py-1 text-center">L</th>
+                    <th className="border border-gray-300 px-2 py-1 text-center">KL</th>
+                    <th className="border border-gray-300 px-2 py-1 text-center">TL</th>
+                    <th className="border border-gray-300 px-2 py-1 text-center">% Lancar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {progresBulanan.map((item) => (
+                    <tr key={item.bulanLabel}>
+                      <td className="border border-gray-300 px-2 py-1">{item.bulanLabel}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-center">{item.total}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-center">{item.L}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-center">{item.KL}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-center">{item.TL}</td>
+                      <td className="border border-gray-300 px-2 py-1 text-center">{item.persentaseLancar}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-sm text-gray-600">Tidak ada data progres bulanan pada periode ini.</p>
+            )}
+          </section>
+
+          <section>
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-2">Detail Evaluasi</h3>
+            {filteredNilai.length > 0 ? (
+              <table className="w-full text-sm border border-gray-300 border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-2 py-1 text-left">Tanggal</th>
+                    <th className="border border-gray-300 px-2 py-1 text-left">Materi</th>
+                    <th className="border border-gray-300 px-2 py-1 text-left">Nilai</th>
+                    <th className="border border-gray-300 px-2 py-1 text-left">Catatan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredNilai.map((nilai) => (
+                    <tr key={nilai.id}>
+                      <td className="border border-gray-300 px-2 py-1">
+                        {formatDisplayDate(nilai.tanggal, { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </td>
+                      <td className="border border-gray-300 px-2 py-1">{nilai.materi || '-'}</td>
+                      <td className="border border-gray-300 px-2 py-1">{NILAI_META[nilai.penilaian]?.label || nilai.penilaian || '-'}</td>
+                      <td className="border border-gray-300 px-2 py-1">{nilai.catatan || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-sm text-gray-600">Tidak ada data evaluasi pada periode yang dipilih.</p>
+            )}
+          </section>
+        </section>
+      )}
     </div>
   );
 };

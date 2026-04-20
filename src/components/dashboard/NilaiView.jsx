@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import NilaiKelompokView from './NilaiKelompokView';
 
 const formatDisplayDate = (value, options = {}) => {
   if (!value) return '-';
@@ -56,13 +57,21 @@ const NILAI_META = {
   },
 };
 
-const NilaiView = ({ user }) => {
+const NilaiView = ({ user, onDataChanged, preselectedKelompokId = '' }) => {
   const [dataNilai, setDataNilai] = useState([]);
   const [kelompokOptions, setKelompokOptions] = useState([]);
   const [selectedKelompokId, setSelectedKelompokId] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleDataChanged = async () => {
+    setRefreshTrigger(prev => prev + 1);
+    if (onDataChanged) {
+      await onDataChanged();
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -124,7 +133,7 @@ const NilaiView = ({ user }) => {
     return () => {
       isMounted = false;
     };
-  }, [user?.id]);
+  }, [user?.id, refreshTrigger]);
 
   const filteredNilai = useMemo(
     () => dataNilai.filter((nilai) => (
@@ -160,6 +169,19 @@ const NilaiView = ({ user }) => {
 
   return (
     <div className="space-y-6 animate-modal-slide pb-10">
+      {/* ── Input Nilai Form ── */}
+      <NilaiKelompokView
+        user={user}
+        onDataChanged={handleDataChanged}
+        preselectedKelompokId={preselectedKelompokId}
+      />
+
+      <div className="relative flex py-2 items-center">
+        <div className="flex-grow border-t border-gray-200/70"></div>
+        <span className="flex-shrink-0 mx-4 text-gray-400 text-xs font-bold uppercase tracking-wider">Histori & Statistik</span>
+        <div className="flex-grow border-t border-gray-200/70"></div>
+      </div>
+
       {/* ── Header Dashboard ── */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 bg-white p-6 rounded-3xl shadow-sm border border-gray-100/50">
         <div>

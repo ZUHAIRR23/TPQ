@@ -234,61 +234,27 @@ const NilaiKelompokView = ({ user, onDataChanged, preselectedKelompokId = '' }) 
   };
 
   return (
-    <div className="space-y-6 animate-modal-slide max-w-4xl mx-auto">
-      <div>
-        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">Input Nilai Kelompok</h2>
-        <p className="text-sm text-gray-500 mt-1">Lakukan evaluasi bacaan santri secara cepat, terstruktur, dan mudah.</p>
-      </div>
+    <div className="space-y-6">
+      <div className="bg-gradient-to-br from-emerald-50/80 via-white to-gray-50 rounded-3xl p-6 shadow-sm border border-emerald-100/50">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 flex items-center gap-2">
+            <svg className="w-7 h-7 text-tpq-green mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            Input Nilai Halaqah
+          </h2>
+          <p className="text-sm text-gray-500 mt-1 max-w-2xl">Lakukan evaluasi bacaan materi santri secara cepat, terstruktur, dan tercatat otomatis dalam histori.</p>
+        </div>
 
-      <div className="grid gap-6">
-        {/* LANGKAH 1 */}
-        <section className={`bg-white rounded-2xl border ${selectedKelompokId ? 'border-gray-200' : 'border-tpq-green shadow-md shadow-tpq-green/5 ring-1 ring-tpq-green/20'} overflow-hidden transition-all duration-300`}>
-          <div className="bg-gray-50/50 px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-gray-800 flex items-center gap-3">
-              <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${selectedKelompokId ? 'bg-gray-200 text-gray-600' : 'bg-tpq-green text-white'}`}>1</span>
-              Pilih Kelompok Halaqah
-            </h3>
-            {selectedKelompokId && (
-              <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                </svg>
-                Telah Dipilih
-              </div>
-            )}
-          </div>
-          <div className="p-5">
-            {kelompokError && (
-              <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 font-medium mb-3">{kelompokError}</div>
-            )}
-            <select
-              value={selectedKelompokId}
-              onChange={(event) => setSelectedKelompokId(event.target.value)}
-              disabled={loadingKelompok || kelompokList.length === 0}
-              className="w-full sm:w-2/3 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green transition-all duration-200 hover:border-gray-300 disabled:opacity-60 bg-gray-50/30"
-            >
-              {kelompokList.length === 0 && <option value="">Belum ada kelompok tersimpan</option>}
-              {kelompokList.length > 0 && (
-                <>
-                  <option value="" disabled>-- Klik untuk memilih kelompok --</option>
-                  {kelompokList.map((kelompok) => (
-                    <option key={kelompok.id} value={kelompok.id}>{kelompok.nama_kelompok} {kelompok.deskripsi ? `(${kelompok.deskripsi})` : ''}</option>
-                  ))}
-                </>
-              )}
-            </select>
-          </div>
-        </section>
-
-        {/* LANGKAH 2 */}
-        <div className={`transition-all duration-500 ease-in-out ${selectedKelompokId ? 'opacity-100 translate-y-0' : 'opacity-50 translate-y-4 pointer-events-none'}`}>
-          <section className={`bg-white rounded-2xl border ${!formNilai.santriId && selectedKelompokId ? 'border-tpq-green shadow-md shadow-tpq-green/5 ring-1 ring-tpq-green/20' : 'border-gray-200'} overflow-hidden transition-all duration-300`}>
+        <div className="grid gap-6">
+          {/* LANGKAH 1 */}
+          <section className={`bg-white rounded-2xl border ${selectedKelompokId ? 'border-gray-200' : 'border-tpq-green shadow-md shadow-tpq-green/5 ring-1 ring-tpq-green/20'} overflow-hidden transition-all duration-300`}>
             <div className="bg-gray-50/50 px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
               <h3 className="text-sm font-bold text-gray-800 flex items-center gap-3">
-                <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${!formNilai.santriId && selectedKelompokId ? 'bg-tpq-green text-white' : 'bg-gray-200 text-gray-600'}`}>2</span>
-                Pilih Santri yang Akan Dinilai
+                <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${selectedKelompokId ? 'bg-gray-200 text-gray-600' : 'bg-tpq-green text-white'}`}>1</span>
+                Pilih Kelompok Halaqah
               </h3>
-              {formNilai.santriId && (
+              {selectedKelompokId && (
                 <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
@@ -298,160 +264,201 @@ const NilaiKelompokView = ({ user, onDataChanged, preselectedKelompokId = '' }) 
               )}
             </div>
             <div className="p-5">
-              {anggotaError && (
-                <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 mb-3">{anggotaError}</div>
+              {kelompokError && (
+                <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 font-medium mb-3">{kelompokError}</div>
               )}
-
-              {loadingAnggota && (
-                <div className="flex items-center gap-3 text-sm text-gray-500 py-2">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-tpq-green"></div>
-                  Memuat anggota kelompok...
-                </div>
-              )}
-
-              {!loadingAnggota && anggotaKelompok.length === 0 && selectedKelompokId && (
-                <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 px-6 py-8 text-center">
-                  <p className="text-sm font-medium text-gray-600">Belum ada santri aktif di kelompok ini.</p>
-                  <p className="text-xs text-gray-400 mt-1">Tambahkan santri ke kelompok melalui menu Data Santri.</p>
-                </div>
-              )}
-
-              {!loadingAnggota && anggotaKelompok.length > 0 && (
-                <div className="flex flex-wrap gap-2.5">
-                  {anggotaKelompok.map((santri) => {
-                    const isSelected = formNilai.santriId === santri.id;
-                    return (
-                      <button
-                        key={santri.id}
-                        type="button"
-                        onClick={() => handleNilaiFormChange('santriId', santri.id)}
-                        className={`px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all duration-200 flex items-center gap-2
-                          ${isSelected
-                            ? 'bg-tpq-green border-tpq-green text-white shadow-md shadow-tpq-green/20 scale-105'
-                            : 'bg-white border-gray-200 text-gray-700 hover:border-tpq-green hover:bg-emerald-50 hover:text-emerald-700'
-                          }`}
-                      >
-                        {isSelected && (
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                        {santri.nama_lengkap}
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
+              <select
+                value={selectedKelompokId}
+                onChange={(event) => setSelectedKelompokId(event.target.value)}
+                disabled={loadingKelompok || kelompokList.length === 0}
+                className="w-full sm:w-2/3 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green transition-all duration-200 hover:border-gray-300 disabled:opacity-60 bg-gray-50/30"
+              >
+                {kelompokList.length === 0 && <option value="">Belum ada kelompok tersimpan</option>}
+                {kelompokList.length > 0 && (
+                  <>
+                    <option value="" disabled>-- Klik untuk memilih kelompok --</option>
+                    {kelompokList.map((kelompok) => (
+                      <option key={kelompok.id} value={kelompok.id}>{kelompok.nama_kelompok} {kelompok.deskripsi ? `(${kelompok.deskripsi})` : ''}</option>
+                    ))}
+                  </>
+                )}
+              </select>
             </div>
           </section>
-        </div>
 
-        {/* LANGKAH 3 */}
-        <div className={`transition-all duration-500 ease-in-out ${formNilai.santriId ? 'opacity-100 translate-y-0' : 'opacity-50 translate-y-4 pointer-events-none'}`}>
-          <section className="bg-white rounded-2xl border-t-4 border-t-tpq-green border-x-gray-200 border-b-gray-200 shadow-lg shadow-tpq-green/5 overflow-hidden">
-            <div className="bg-gray-50/50 px-5 py-3.5 border-b border-gray-100">
-              <h3 className="text-sm font-bold text-gray-800 flex items-center gap-3">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-tpq-green text-white text-xs font-bold">3</span>
-                Masukkan Detail Penilaian
-              </h3>
-            </div>
+          {/* LANGKAH 2 */}
+          <div className={`transition-all duration-500 ease-in-out ${selectedKelompokId ? 'opacity-100 translate-y-0' : 'opacity-50 translate-y-4 pointer-events-none'}`}>
+            <section className={`bg-white rounded-2xl border ${!formNilai.santriId && selectedKelompokId ? 'border-tpq-green shadow-md shadow-tpq-green/5 ring-1 ring-tpq-green/20' : 'border-gray-200'} overflow-hidden transition-all duration-300`}>
+              <div className="bg-gray-50/50 px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+                <h3 className="text-sm font-bold text-gray-800 flex items-center gap-3">
+                  <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${!formNilai.santriId && selectedKelompokId ? 'bg-tpq-green text-white' : 'bg-gray-200 text-gray-600'}`}>2</span>
+                  Pilih Santri yang Akan Dinilai
+                </h3>
+                {formNilai.santriId && (
+                  <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Telah Dipilih
+                  </div>
+                )}
+              </div>
+              <div className="p-5">
+                {anggotaError && (
+                  <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 mb-3">{anggotaError}</div>
+                )}
 
-            <form onSubmit={handleSimpanNilai} className="p-5 space-y-5">
-              <div className="grid sm:grid-cols-2 gap-5">
+                {loadingAnggota && (
+                  <div className="flex items-center gap-3 text-sm text-gray-500 py-2">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-tpq-green"></div>
+                    Memuat anggota kelompok...
+                  </div>
+                )}
+
+                {!loadingAnggota && anggotaKelompok.length === 0 && selectedKelompokId && (
+                  <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 px-6 py-8 text-center">
+                    <p className="text-sm font-medium text-gray-600">Belum ada santri aktif di kelompok ini.</p>
+                    <p className="text-xs text-gray-400 mt-1">Tambahkan santri ke kelompok melalui menu Data Santri.</p>
+                  </div>
+                )}
+
+                {!loadingAnggota && anggotaKelompok.length > 0 && (
+                  <div className="flex flex-wrap gap-2.5">
+                    {anggotaKelompok.map((santri) => {
+                      const isSelected = formNilai.santriId === santri.id;
+                      return (
+                        <button
+                          key={santri.id}
+                          type="button"
+                          onClick={() => handleNilaiFormChange('santriId', santri.id)}
+                          className={`px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all duration-200 flex items-center gap-2
+                          ${isSelected
+                              ? 'bg-tpq-green border-tpq-green text-white shadow-md shadow-tpq-green/20 scale-105'
+                              : 'bg-white border-gray-200 text-gray-700 hover:border-tpq-green hover:bg-emerald-50 hover:text-emerald-700'
+                            }`}
+                        >
+                          {isSelected && (
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                          {santri.nama_lengkap}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
+
+          {/* LANGKAH 3 */}
+          <div className={`transition-all duration-500 ease-in-out ${formNilai.santriId ? 'opacity-100 translate-y-0' : 'opacity-50 translate-y-4 pointer-events-none'}`}>
+            <section className="bg-white rounded-2xl border-t-4 border-t-tpq-green border-x-gray-200 border-b-gray-200 shadow-lg shadow-tpq-green/5 overflow-hidden">
+              <div className="bg-gray-50/50 px-5 py-3.5 border-b border-gray-100">
+                <h3 className="text-sm font-bold text-gray-800 flex items-center gap-3">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-tpq-green text-white text-xs font-bold">3</span>
+                  Masukkan Detail Penilaian
+                </h3>
+              </div>
+
+              <form onSubmit={handleSimpanNilai} className="p-5 space-y-5">
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-gray-700">Tanggal Pertemuan</label>
+                    <input
+                      type="date"
+                      value={formNilai.tanggal}
+                      onChange={(event) => handleNilaiFormChange('tanggal', event.target.value)}
+                      disabled={savingNilai}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green bg-gray-50/30 transition-all"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-gray-700">Pilih Nilai Bacaan</label>
+                    <div className="relative">
+                      <select
+                        value={formNilai.penilaian}
+                        onChange={(event) => handleNilaiFormChange('penilaian', event.target.value)}
+                        disabled={savingNilai}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green bg-gray-50/30 appearance-none transition-all"
+                        required
+                      >
+                        <option value="L">🟢 L - Lancar (Lulus/Melanjutkan)</option>
+                        <option value="KL">🟡 KL - Kurang Lancar (Perlu Banyak Latihan)</option>
+                        <option value="TL">🔴 TL - Tidak Lancar (Wajib Mengulang)</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-700">Tanggal Pertemuan</label>
+                  <label className="text-sm font-semibold text-gray-700">Materi / Halaman yang Dibaca</label>
                   <input
-                    type="date"
-                    value={formNilai.tanggal}
-                    onChange={(event) => handleNilaiFormChange('tanggal', event.target.value)}
+                    type="text"
+                    value={formNilai.materi}
+                    onChange={(event) => handleNilaiFormChange('materi', event.target.value)}
                     disabled={savingNilai}
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green bg-gray-50/30 transition-all"
-                    required
+                    placeholder="Contoh: Jilid 3 Hal. 12-14 atau Surah Al-Baqarah ayat 1-10"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-700">Pilih Nilai Bacaan</label>
-                  <div className="relative">
-                    <select
-                      value={formNilai.penilaian}
-                      onChange={(event) => handleNilaiFormChange('penilaian', event.target.value)}
-                      disabled={savingNilai}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green bg-gray-50/30 appearance-none transition-all"
-                      required
-                    >
-                      <option value="L">🟢 L - Lancar (Lulus/Melanjutkan)</option>
-                      <option value="KL">🟡 KL - Kurang Lancar (Perlu Banyak Latihan)</option>
-                      <option value="TL">🔴 TL - Tidak Lancar (Wajib Mengulang)</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
+                  <label className="text-sm font-semibold text-gray-700">Catatan Evaluasi (Ikhtisar)</label>
+                  <textarea
+                    value={formNilai.catatan}
+                    onChange={(event) => handleNilaiFormChange('catatan', event.target.value)}
+                    disabled={savingNilai}
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm min-h-[96px] resize-none focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green bg-gray-50/30 transition-all"
+                    placeholder="Contoh: Panjang pendek (Mad) masih sering keliru, perbanyak latihan di rumah."
+                  />
+                </div>
+
+                {nilaiError && (
+                  <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 font-medium flex items-start gap-2">
+                    <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    {nilaiError}
                   </div>
+                )}
+                {nilaiSuccess && (
+                  <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 font-medium flex items-start gap-2 animate-bounce-short">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    {nilaiSuccess}
+                  </div>
+                )}
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={savingNilai || anggotaKelompok.length === 0 || !selectedKelompokId || !formNilai.santriId}
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-tpq-green text-white text-sm font-bold tracking-wide hover:bg-emerald-600 disabled:opacity-60 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex justify-center items-center gap-2"
+                  >
+                    {savingNilai ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Menyimpan Data...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                        </svg>
+                        Simpan Nilai Santri
+                      </>
+                    )}
+                  </button>
                 </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-gray-700">Materi / Halaman yang Dibaca</label>
-                <input
-                  type="text"
-                  value={formNilai.materi}
-                  onChange={(event) => handleNilaiFormChange('materi', event.target.value)}
-                  disabled={savingNilai}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green bg-gray-50/30 transition-all"
-                  placeholder="Contoh: Jilid 3 Hal. 12-14 atau Surah Al-Baqarah ayat 1-10"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-gray-700">Catatan Evaluasi (Ikhtisar)</label>
-                <textarea
-                  value={formNilai.catatan}
-                  onChange={(event) => handleNilaiFormChange('catatan', event.target.value)}
-                  disabled={savingNilai}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm min-h-[96px] resize-none focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green bg-gray-50/30 transition-all"
-                  placeholder="Contoh: Panjang pendek (Mad) masih sering keliru, perbanyak latihan di rumah."
-                />
-              </div>
-
-              {nilaiError && (
-                <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 font-medium flex items-start gap-2">
-                  <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  {nilaiError}
-                </div>
-              )}
-              {nilaiSuccess && (
-                <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 font-medium flex items-start gap-2 animate-bounce-short">
-                  <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  {nilaiSuccess}
-                </div>
-              )}
-
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={savingNilai || anggotaKelompok.length === 0 || !selectedKelompokId || !formNilai.santriId}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-tpq-green text-white text-sm font-bold tracking-wide hover:bg-emerald-600 disabled:opacity-60 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex justify-center items-center gap-2"
-                >
-                  {savingNilai ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      Menyimpan Data...
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                      </svg>
-                      Simpan Nilai Santri
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </section>
+              </form>
+            </section>
+          </div>
         </div>
       </div>
     </div>

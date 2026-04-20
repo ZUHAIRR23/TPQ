@@ -29,7 +29,7 @@ const getInitials = (name) => {
   return name.substring(0, 2).toUpperCase();
 };
 
-const DataSantriView = ({ user, onSantriStatusChanged, onKelompokAssigned }) => {
+const DataSantriView = ({ user, onSantriStatusChanged, onKelompokAssigned, onOpenAddSantri }) => {
   const navigate = useNavigate();
   const [dataSantri, setDataSantri] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -255,19 +255,33 @@ const DataSantriView = ({ user, onSantriStatusChanged, onKelompokAssigned }) => 
             <p className="text-sm text-gray-500 mt-1">Kelola informasi, profil, dan penempatan halaqah santri Anda.</p>
           </div>
 
-          <div className="relative max-w-sm w-full md:w-80 group">
-            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-tpq-green transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-              </svg>
+          <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3 md:items-center">
+            {onOpenAddSantri && (
+              <button
+                type="button"
+                onClick={onOpenAddSantri}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-tpq-green text-white text-sm font-bold shadow-sm hover:bg-emerald-600 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Tambah Santri
+              </button>
+            )}
+            <div className="relative max-w-sm w-full md:w-80 group">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-tpq-green transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Cari nama santri..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green transition-all shadow-sm group-hover:shadow-md"
+              />
             </div>
-            <input
-              type="text"
-              placeholder="Cari nama santri..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green transition-all shadow-sm group-hover:shadow-md"
-            />
           </div>
         </div>
 

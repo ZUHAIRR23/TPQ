@@ -797,6 +797,9 @@ const DashboardPage = () => {
 
   const canOpenAbsensiModal = !loadingSantri && totalSantri > 0 && !absensiError;
   const canOpenNilaiModal = !loadingSantri && totalSantri > 0 && !nilaiError;
+  const absensiQuickActionDesc = absensiError
+    ? 'Setup tabel absensi dulu'
+    : (canOpenAbsensiModal ? 'Catat kehadiran santri' : (loadingSantri ? 'Memuat data santri...' : 'Tambah santri dulu'));
   const absensiKelompokOptions = useMemo(() => {
     const kelompokMap = new Map();
     santriOptions.forEach((santri) => {
@@ -840,9 +843,7 @@ const DashboardPage = () => {
         </svg>
       ),
       label: 'Catat Absensi',
-      desc: absensiError
-        ? 'Setup tabel absensi dulu'
-        : (canOpenAbsensiModal ? 'Catat kehadiran santri' : (loadingSantri ? 'Memuat data santri...' : 'Tambah santri dulu')),
+      desc: absensiQuickActionDesc,
       onClick: openAddAbsensiModal,
       disabled: !canOpenAbsensiModal,
     },
@@ -982,9 +983,17 @@ const DashboardPage = () => {
               user={user}
               onSantriStatusChanged={handleSantriStatusChanged}
               onKelompokAssigned={handleKelompokDataChanged}
+              onOpenAddSantri={openAddSantriModal}
             />
           )}
-          {activeTab === 'Absensi' && <AbsensiView user={user} />}
+          {activeTab === 'Absensi' && (
+            <AbsensiView
+              user={user}
+              onOpenAddAbsensi={openAddAbsensiModal}
+              canOpenAddAbsensi={canOpenAbsensiModal}
+              addAbsensiHint={absensiQuickActionDesc}
+            />
+          )}
           {activeTab === 'Nilai' && <NilaiView user={user} />}
           {activeTab === 'Kelompok' && (
             <KelompokView

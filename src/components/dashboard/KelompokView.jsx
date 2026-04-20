@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabase';
 const INITIAL_KELOMPOK_FORM = {
   namaKelompok: '',
   deskripsi: '',
+  selectedSantriIds: [],
 };
 
 const getSupabaseErrorMessage = (error, tableName = 'kelompok') => {
@@ -42,6 +43,8 @@ const KelompokView = ({ user, onDataChanged, onOpenNilaiKelompok }) => {
   const [loadingKelompok, setLoadingKelompok] = useState(true);
   const [savingKelompok, setSavingKelompok] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isSantriDropdownOpen, setIsSantriDropdownOpen] = useState(false);
+  const [santriTanpaKelompok, setSantriTanpaKelompok] = useState([]);
 
   const [kelompokError, setKelompokError] = useState('');
   const [kelompokSuccess, setKelompokSuccess] = useState('');
@@ -95,6 +98,31 @@ const KelompokView = ({ user, onDataChanged, onOpenNilaiKelompok }) => {
   }, [user?.id]);
 
   useEffect(() => {
+    const fetchSantri = async () => {
+      if (!user?.id || !isFormVisible) return;
+      try {
+        const { data, error } = await supabase
+          .from('santri')
+          .select('id, nama_lengkap')
+          .eq('created_by', user.id)
+          .is('kelompok_id', null)
+          .neq('status', 'Nonaktif')
+          .order('nama_lengkap', { ascending: true });
+
+        if (error) throw error;
+        setSantriTanpaKelompok(data || []);
+      } catch (error) {
+        console.error('Error fetching santri:', error);
+      }
+    };
+    fetchSantri();
+
+    if (!isFormVisible) {
+      setIsSantriDropdownOpen(false);
+    }
+  }, [user?.id, isFormVisible]);
+
+  useEffect(() => {
     if (!kelompokSuccess) return undefined;
     const timer = setTimeout(() => setKelompokSuccess(''), 3500);
     return () => clearTimeout(timer);
@@ -123,13 +151,25 @@ const KelompokView = ({ user, onDataChanged, onOpenNilaiKelompok }) => {
     setKelompokSuccess('');
 
     try {
-      const { error } = await supabase.from('kelompok').insert({
+      const { data: insertedData, error } = await supabase.from('kelompok').insert({
         created_by: user.id,
         nama_kelompok: namaKelompok,
         deskripsi: formKelompok.deskripsi.trim() || null,
-      });
+      }).select();
 
       if (error) throw error;
+
+      const newKelompok = insertedData?.[0];
+
+      if (newKelompok && formKelompok.selectedSantriIds?.length > 0) {
+        const { error: santriError } = await supabase
+          .from('santri')
+          .update({ kelompok_id: newKelompok.id })
+          .in('id', formKelompok.selectedSantriIds)
+          .eq('created_by', user.id);
+
+        if (santriError) throw santriError;
+      }
 
       setKelompokSuccess(`Kelompok ${namaKelompok} berhasil ditambahkan.`);
       setFormKelompok(INITIAL_KELOMPOK_FORM);
@@ -205,6 +245,59 @@ const KelompokView = ({ user, onDataChanged, onOpenNilaiKelompok }) => {
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green shadow-sm transition-all duration-200 hover:border-gray-300 disabled:opacity-60"
                   placeholder="Penjelasan singkat kelompok ini"
                 />
+              </div>
+            </div>
+
+            <div className="space-y-1.5 relative">
+              <label className="text-sm font-semibold text-gray-700">Pilih Santri</label>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsSantriDropdownOpen(!isSantriDropdownOpen)}
+                  disabled={savingKelompok}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-left flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-tpq-green/20 focus:border-tpq-green shadow-sm hover:border-gray-300 disabled:opacity-60"
+                >
+                  <span className={formKelompok.selectedSantriIds.length > 0 ? "text-gray-900" : "text-gray-400"}>
+                    {formKelompok.selectedSantriIds.length > 0
+                      ? `${formKelompok.selectedSantriIds.length} Santri dipilih`
+                      : 'Pilih santri yang belum memiliki kelompok'}
+                  </span>
+                  <svg className={`w-5 h-5 text-gray-400 transition-transform ${isSantriDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {isSantriDropdownOpen && (
+                  <div className="absolute z-10 top-full left-0 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-56 overflow-y-auto">
+                    <div className="p-2 space-y-1">
+                      {santriTanpaKelompok.length === 0 ? (
+                        <div className="px-3 py-4 text-center text-sm text-gray-500">
+                          Tidak ada santri yang tersedia.
+                        </div>
+                      ) : (
+                        santriTanpaKelompok.map((santri) => (
+                          <label key={santri.id} className="flex items-center gap-3 px-3 py-2.5 hover:bg-emerald-50 rounded-lg cursor-pointer transition-colors group">
+                            <input
+                              type="checkbox"
+                              checked={formKelompok.selectedSantriIds.includes(santri.id)}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                handleKelompokFormChange(
+                                  'selectedSantriIds',
+                                  checked
+                                    ? [...formKelompok.selectedSantriIds, santri.id]
+                                    : formKelompok.selectedSantriIds.filter(id => id !== santri.id)
+                                );
+                              }}
+                              className="w-4 h-4 rounded text-tpq-green border-gray-300 focus:ring-tpq-green cursor-pointer"
+                            />
+                            <span className="text-sm font-medium text-gray-700 group-hover:text-emerald-900">{santri.nama_lengkap}</span>
+                          </label>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

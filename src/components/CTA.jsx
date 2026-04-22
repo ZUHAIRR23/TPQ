@@ -24,7 +24,7 @@ const CTA = () => {
                     <span className="text-tpq-yellow">Secara Digital?</span>
                 </h2>
                 <p className="text-lg md:text-xl text-white/50 mb-12 max-w-2xl mx-auto leading-relaxed">
-                    Bergabung dengan ratusan ustadz lainnya yang sudah beralih ke TPQ Platform. Daftar sekarang dan rasakan kemudahannya.
+                    Bergabung dengan ratusan ustadz lainnya yang sudah beralih ke Athir TPQ. Daftar sekarang dan rasakan kemudahannya.
                 </p>
 
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-4">

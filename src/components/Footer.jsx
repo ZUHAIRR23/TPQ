@@ -9,7 +9,7 @@ const Footer = () => {
                             T
                         </div>
                         <div>
-                            <h1 className="font-bold text-lg text-white tracking-wide">TPQ Platform</h1>
+                            <h1 className="font-bold text-lg text-white tracking-wide">Athir TPQ</h1>
                             <p className="text-xs text-gray-500 tracking-wider">Manajemen TPQ Digital</p>
                         </div>
                     </div>
@@ -83,7 +83,7 @@ const Footer = () => {
             </div>
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 border-t border-white/5 text-center text-sm text-gray-600">
-                <p>&copy; 2026 TPQ Platform. Hak Cipta Dilindungi.</p>
+                <p>&copy; 2026 Athir TPQ. Hak Cipta Dilindungi.</p>
             </div>
         </footer>
     );

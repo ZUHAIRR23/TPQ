@@ -44,7 +44,7 @@ const About = () => {
                 <div className="text-center mb-20">
                     <div className="inline-flex items-center gap-2 text-tpq-green font-bold text-sm mb-4 uppercase tracking-wider">
                         <span className="w-2 h-2 rounded-full bg-tpq-green" />
-                        KENAPA TPQ PLATFORM?
+                        KENAPA ATHIR TPQ?
                     </div>
                     <h2 className="text-4xl md:text-5xl font-bold text-tpq-green mb-6 leading-tight">
                         Dibuat Khusus untuk <br className="hidden md:block" /> Kebutuhan Ustadz

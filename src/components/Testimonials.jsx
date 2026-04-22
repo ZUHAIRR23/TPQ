@@ -1,7 +1,7 @@
 const Testimonials = () => {
     const reviews = [
         {
-            text: "Sejak pakai TPQ Platform, saya tidak perlu lagi mencatat absensi di buku. Semuanya rapi, tinggal klik. Sangat membantu apalagi saat harus laporan ke pimpinan TPQ.",
+            text: "Sejak pakai Athir TPQ, saya tidak perlu lagi mencatat absensi di buku. Semuanya rapi, tinggal klik. Sangat membantu apalagi saat harus laporan ke pimpinan TPQ.",
             name: "Ust. Ahmad Fauzi",
             role: "Pengajar TPQ Nurul Iman, Bandung",
             initial: "AF",
@@ -30,7 +30,7 @@ const Testimonials = () => {
                     </div>
                     <h2 className="text-4xl md:text-5xl font-bold mb-6">Dipercaya Ustadz di Seluruh Indonesia</h2>
                     <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-                        Dengarkan pengalaman langsung dari para ustadz yang sudah menggunakan TPQ Platform
+                        Dengarkan pengalaman langsung dari para ustadz yang sudah menggunakan Athir TPQ
                     </p>
                 </div>
 

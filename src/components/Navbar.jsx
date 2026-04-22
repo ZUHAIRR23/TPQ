@@ -19,7 +19,7 @@ const Navbar = () => {
                         T
                     </div>
                     <div>
-                        <h1 className="font-bold text-lg text-white leading-tight tracking-wide">TPQ Platform</h1>
+                        <h1 className="font-bold text-lg text-white leading-tight tracking-wide">Athir TPQ</h1>
                         <p className="text-[10px] text-white/40 tracking-wider">Manajemen TPQ Digital</p>
                     </div>
                 </div>

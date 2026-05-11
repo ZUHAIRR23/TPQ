@@ -14,11 +14,6 @@ const CTA = () => {
             }} />
 
             <div className="max-w-4xl mx-auto px-6 md:px-12 text-center relative z-10">
-                <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-xs font-semibold mb-8 border border-white/10">
-                    <span className="w-2 h-2 rounded-full bg-tpq-yellow animate-pulse" />
-                    100% Gratis — Tidak Ada Biaya Tersembunyi
-                </div>
-
                 <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
                     Siap Mengelola TPQ <br className="hidden md:block" />
                     <span className="text-tpq-yellow">Secara Digital?</span>

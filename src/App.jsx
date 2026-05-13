@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
-import SubscriptionPage from './pages/SubscriptionPage';
 import DashboardPage from './pages/DashboardPage';
 import SantriNilaiPage from './pages/SantriNilaiPage';
 import { supabase } from './lib/supabase';
-import { hasActiveSubscription } from './lib/subscription';
 
-const ProtectedRoute = ({ session, requiresSubscription = false, hasSubscription = false, children }) => {
+const ProtectedRoute = ({ session, children }) => {
   if (session === undefined) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-600">
@@ -19,10 +17,6 @@ const ProtectedRoute = ({ session, requiresSubscription = false, hasSubscription
 
   if (!session) {
     return <Navigate to="/auth" replace />;
-  }
-
-  if (requiresSubscription && !hasSubscription) {
-    return <Navigate to="/subscription" replace />;
   }
 
   return children;
@@ -42,7 +36,6 @@ const GuestOnlyRoute = ({ session, children }) => {
 
 function App() {
   const [session, setSession] = useState(undefined);
-  const [hasSubscription, setHasSubscription] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -50,7 +43,6 @@ function App() {
     supabase.auth.getSession().then(({ data }) => {
       if (isMounted) {
         setSession(data.session);
-        setHasSubscription(hasActiveSubscription(data.session?.user?.id));
       }
     });
 
@@ -58,7 +50,6 @@ function App() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
-      setHasSubscription(hasActiveSubscription(newSession?.user?.id));
     });
 
     return () => {
@@ -79,19 +70,9 @@ function App() {
         }
       />
       <Route
-        path="/subscription"
-        element={
-          <SubscriptionPage
-            session={session}
-            hasSubscription={hasSubscription}
-            onSubscriptionChange={setHasSubscription}
-          />
-        }
-      />
-      <Route
         path="/dashboard"
         element={
-          <ProtectedRoute session={session} requiresSubscription hasSubscription={hasSubscription}>
+          <ProtectedRoute session={session}>
             <DashboardPage />
           </ProtectedRoute>
         }
@@ -99,7 +80,7 @@ function App() {
       <Route
         path="/dashboard/santri/:santriId/nilai"
         element={
-          <ProtectedRoute session={session} requiresSubscription hasSubscription={hasSubscription}>
+          <ProtectedRoute session={session}>
             <SantriNilaiPage />
           </ProtectedRoute>
         }

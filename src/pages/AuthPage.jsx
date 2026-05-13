@@ -36,7 +36,7 @@ const AuthPage = () => {
         }
 
         if (data.session) {
-          navigate('/subscription', { replace: true });
+          navigate('/dashboard', { replace: true });
           return;
         }
 
@@ -53,7 +53,7 @@ const AuthPage = () => {
         throw signInError;
       }
 
-      navigate('/subscription', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(err.message || 'Terjadi kesalahan saat autentikasi.');
     } finally {

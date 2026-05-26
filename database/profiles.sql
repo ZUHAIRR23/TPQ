@@ -45,19 +45,3 @@ for update
 to authenticated
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);
-
--- =============================================================
--- Supabase Storage: buat bucket "logos" via Dashboard
---
--- 1. Buka Supabase Dashboard > Storage
--- 2. Klik "New Bucket", nama: logos, Public: ON
--- 3. Tambah policy berikut di bucket logos:
---
---    SELECT (download): allow authenticated, TRUE
---    INSERT (upload):   allow authenticated, bucket_id = 'logos'
---                       AND (storage.foldername(name))[1] = auth.uid()::text
---    UPDATE:            allow authenticated, bucket_id = 'logos'
---                       AND (storage.foldername(name))[1] = auth.uid()::text
---    DELETE:            allow authenticated, bucket_id = 'logos'
---                       AND (storage.foldername(name))[1] = auth.uid()::text
--- =============================================================

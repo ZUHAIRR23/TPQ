@@ -7,7 +7,7 @@ const Features = () => {
                 </svg>
             ),
             title: 'Data Santri',
-            desc: 'Kelola data lengkap santri: nama, wali, kontak, alamat, dan status. Tambah, edit, dan cari dengan mudah.',
+            desc: 'Kelola data lengkap santri: nama, wali, kontak, alamat, dan status. Input, edit, dan cari dengan mudah.',
             color: 'from-blue-500/20 to-blue-600/5',
             iconBg: 'bg-blue-500/15 text-blue-400',
             border: 'border-blue-500/20',

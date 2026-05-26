@@ -14,7 +14,7 @@ const HowItWorks = () => {
         },
         {
             number: '02',
-            title: 'Tambah Data Santri',
+            title: 'Input Data Santri',
             desc: 'Masukkan data santri, buat kelompok halaqah, dan atur sesuai kebutuhan TPQ Anda.',
             icon: (
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -46,7 +46,7 @@ const HowItWorks = () => {
                         Mulai dalam 3 Langkah
                     </h2>
                     <p className="text-gray-500 max-w-2xl mx-auto text-lg leading-relaxed">
-                        Tidak perlu keahlian teknis. Cukup daftar, tambah data, dan langsung gunakan.
+                        Tidak perlu keahlian teknis. Cukup daftar, input data, dan langsung gunakan.
                     </p>
                 </div>
 

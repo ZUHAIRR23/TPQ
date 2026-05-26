@@ -36,7 +36,7 @@ const AuthPage = () => {
         }
 
         if (data.session) {
-          navigate('/dashboard', { replace: true });
+          navigate('/subscribe', { replace: true });
           return;
         }
 
@@ -44,7 +44,7 @@ const AuthPage = () => {
         return;
       }
 
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -53,7 +53,20 @@ const AuthPage = () => {
         throw signInError;
       }
 
-      navigate('/dashboard', { replace: true });
+      // Check if user already has an active subscription
+      const { data: subData } = await supabase
+        .from('subscriptions')
+        .select('id')
+        .eq('user_id', signInData.user.id)
+        .eq('status', 'active')
+        .limit(1)
+        .maybeSingle();
+
+      if (subData) {
+        navigate('/dashboard', { replace: true });
+      } else {
+        navigate('/subscribe', { replace: true });
+      }
     } catch (err) {
       setError(err.message || 'Terjadi kesalahan saat autentikasi.');
     } finally {

@@ -1,6 +1,3 @@
--- Jalankan file ini di Supabase SQL Editor.
--- Tujuan: membuat tabel santri & absensi + RLS agar user hanya mengakses datanya sendiri.
-
 create extension if not exists pgcrypto;
 
 create table if not exists public.santri (

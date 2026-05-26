@@ -19,7 +19,7 @@ const Hero = () => {
                     <div>
                         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-xs font-semibold mb-8 border border-white/10">
                             <span className="w-2 h-2 rounded-full bg-tpq-yellow animate-pulse" />
-                            Platform Manajemen TPQ #1 di Indonesia
+                            Platform Manajemen TPQ
                         </div>
 
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.1] mb-6 tracking-tight">

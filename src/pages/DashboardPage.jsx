@@ -98,6 +98,7 @@ const DashboardPage = () => {
   const [nilaiHariIni, setNilaiHariIni] = useState(0);
   const [loadingNilaiHariIni, setLoadingNilaiHariIni] = useState(true);
   const [nilaiError, setNilaiError] = useState('');
+  const [profile, setProfile] = useState(null);
 
   const [showAddSantriModal, setShowAddSantriModal] = useState(false);
   const [savingSantri, setSavingSantri] = useState(false);
@@ -255,6 +256,27 @@ const DashboardPage = () => {
     }
   };
 
+  const fetchProfile = async (userId) => {
+    if (!userId) {
+      setProfile(null);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('logo_url')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (error) throw error;
+      setProfile(data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      setProfile(null);
+    }
+  };
+
   const fetchSantriOptions = async (userId, onError) => {
     if (!userId) {
       setSantriOptions([]);
@@ -295,12 +317,14 @@ const DashboardPage = () => {
       fetchSantri(user.id);
       fetchKehadiranHariIni(user.id);
       fetchNilaiHariIni(user.id);
+      fetchProfile(user.id);
     } else {
       setLoadingSantri(false);
       setLoadingKehadiran(false);
       setLoadingNilaiHariIni(false);
       setKehadiranHariIni(0);
       setNilaiHariIni(0);
+      setProfile(null);
       setAbsensiError('');
       setNilaiError('');
       setSantriOptions([]);
@@ -899,14 +923,27 @@ const DashboardPage = () => {
 
         <div className="px-4 pb-6 space-y-3">
           <div className="bg-white/10 rounded-xl p-3 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-tpq-yellow text-tpq-green flex items-center justify-center text-xs font-bold shrink-0">
-              {userInitials}
+            <div className="w-9 h-9 rounded-full bg-tpq-yellow text-tpq-green flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
+              {profile?.logo_url ? (
+                <img src={profile.logo_url} alt="Logo" className="w-full h-full object-cover" />
+              ) : (
+                userInitials
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-white text-sm font-semibold truncate">{userName}</p>
               <p className="text-white/40 text-xs truncate">{userEmail}</p>
             </div>
           </div>
+          <button
+            onClick={() => navigate('/dashboard/profile')}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 text-white/80 hover:text-white hover:bg-white/15 transition text-sm font-medium"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Profil Lembaga
+          </button>
           <button
             onClick={handleSignOut}
             disabled={signingOut}
@@ -948,8 +985,12 @@ const DashboardPage = () => {
                 </svg>
                 Beranda
               </Link>
-              <div className="w-9 h-9 rounded-full bg-tpq-green text-white flex items-center justify-center text-xs font-bold">
-                {userInitials}
+              <div className="w-9 h-9 rounded-full bg-tpq-green text-white flex items-center justify-center text-xs font-bold overflow-hidden border border-gray-200">
+                {profile?.logo_url ? (
+                  <img src={profile.logo_url} alt="Logo" className="w-full h-full object-cover" />
+                ) : (
+                  userInitials
+                )}
               </div>
             </div>
           </div>

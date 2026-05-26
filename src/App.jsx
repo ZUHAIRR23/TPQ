@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage';
 import SantriNilaiPage from './pages/SantriNilaiPage';
 import SubscriptionPage from './pages/SubscriptionPage';
 import PaymentVerifyPage from './pages/PaymentVerifyPage';
+import ProfilePage from './pages/ProfilePage';
 import { supabase } from './lib/supabase';
 
 const LoadingScreen = () => (
@@ -118,6 +119,14 @@ function App() {
         element={
           <SubscribedRoute session={session} subscription={subscription}>
             <SantriNilaiPage />
+          </SubscribedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/profile"
+        element={
+          <SubscribedRoute session={session} subscription={subscription}>
+            <ProfilePage />
           </SubscribedRoute>
         }
       />
